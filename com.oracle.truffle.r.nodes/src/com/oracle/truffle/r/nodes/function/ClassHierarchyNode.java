@@ -219,8 +219,31 @@ public abstract class ClassHierarchyNode extends UnaryNode {
         }
     }
 
+//    protected static boolean isRTypedValue(Object obj) {
+//        return obj instanceof RTypedValue;
+//    }
+//
+//    public interface TruffleClass {
+//        RStringVector getTruffleClass();
+//    }
+//
+//    @Specialization(guards = "!isRTypedValue(object)")
+//    protected RStringVector getClassHrTruffleObject(@SuppressWarnings("unused") TruffleObject object) {
+//        if (object instanceof TruffleClass) {
+//            return ((TruffleClass) object).getTruffleClass();
+//        }
+//        return truffleObjectClassHeader;
+//    }
+
+    public interface TruffleClass {
+        RStringVector getTruffleClass();
+    }
+
     @Specialization(guards = "isForeignObject(object)")
     protected RStringVector getClassHrTruffleObject(@SuppressWarnings("unused") TruffleObject object) {
+        if (object instanceof TruffleClass) {
+            return ((TruffleClass) object).getTruffleClass();
+        }
         return withImplicitTypes ? truffleObjectClassHeader : null;
     }
 
